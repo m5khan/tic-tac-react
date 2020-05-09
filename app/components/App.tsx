@@ -6,14 +6,12 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles(() => ({
     container: {
         flexGrow: 1,
-        // backgroundColor: 'orange',
-        height: '85vh',
+        minHeight: '85vh',
         alignItems: 'center'
     },
     box: {
-        // backgroundColor: 'red',
         width: '100%',
-        height: '100%',
+        minHeight: '85vh'
     }
 }));
 

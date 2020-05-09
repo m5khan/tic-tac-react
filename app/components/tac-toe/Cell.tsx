@@ -21,6 +21,7 @@ const useStyles = makeStyles(() => ({
 
 type Props = {
     sign: Sign;
+    cellIndex: number[]
 }
 
 const Cell: React.FC<Props> = (props: Props) => {
