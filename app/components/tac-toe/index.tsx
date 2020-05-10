@@ -122,45 +122,47 @@ const TicTacToe: React.FC = () => {
         })
     }
 
+    /**
+     * Run evaluation on board along horizontal, vartical and diagnol rows
+     */
     const evaluateBoard = (board: Board, cell: number[]): number => {
         const sign = board[cell[0]][cell[1]];
-        // horizontal
-        const rowEval = (row: Sign[], currentIndex: number) => {
-            let count = 1;
-            let brk = false;
-            let left = currentIndex;
-            let right = currentIndex;
-            //let row = board[cell[0]];
-            while(!brk) {
-                if(row[left -1] && row[left - 1] === sign && left > -1 ) {
-                    left --;
+        const rowEval = (row: Sign[]): number => {
+            let count = 0;
+            for (let sn of row) {
+                if(sn === sign) {
                     count ++;
-                } else {
-                    left = -1;
                 }
-                if(row[right +1] && row[right +1] === sign && right > -1) {
-                    right ++;
-                    count ++;
-                } else {
-                    right = -1;
-                }
-                if(left === -1 && right === -1) {
-                    brk = true;
+                if(count >= 5) {
+                    break;
+                } else if (sn !== sign){
+                    count = 0;
                 }
             }
             return count;
         }
+
         //horizontal
         const hRow = board[cell[0]];
-        const hCurrentIndex = cell[1];
-        const hCount = rowEval(hRow, hCurrentIndex);
+        const hCount = rowEval(hRow);
         //vertical
         const vRow = board.map((rows: Sign[]) => rows[cell[1]]);
-        const vCurrentIndex = cell[0];
-        const vCount = rowEval(vRow, vCurrentIndex);
-        // diagnol
-
-        return vCount
+        const vCount = rowEval(vRow);
+        // diagnol \
+        const d1Row = board.map((row, index) => {
+            const rowDiff = cell[0] - index;
+            const diagIndex = cell[1] - rowDiff;
+            return row[diagIndex] ? row[diagIndex] : Sign.nix
+        });
+        const d1Count = rowEval(d1Row);
+        // diagnol /
+        const d2Row = board.map((row, index) => {
+            const rowDiff = cell[0] - index;
+            const diagIndex = cell[1] + rowDiff;
+            return row[diagIndex] ? row[diagIndex] : Sign.nix
+        });
+        const d2Count = rowEval(d2Row);
+        return Math.max(hCount, vCount, d1Count, d2Count);
     }
 
 
