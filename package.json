@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:dev": "webpack --config webpack.config.ts --mode development --watch",
     "build": "webpack --config webpack.config.ts",
-    "start": "http-server -c-1 -p 3000"
+    "start": "http-server -c-1"
   },
   "repository": {
     "type": "git",
