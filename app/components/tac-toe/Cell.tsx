@@ -17,14 +17,11 @@ const useStyles = makeStyles(() => ({
     }
 }));
 
-
-
 type Props = {
     sign: Sign;
     cellIndex: number[];
     onCellClick: (cellIndex: number[]) => void
 }
-
 const Cell: React.FC<Props> = (props: Props) => {
     const classes = useStyles();
 

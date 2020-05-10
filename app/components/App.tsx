@@ -1,7 +1,8 @@
 import React from 'react';
 import { Container, Box } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-
+import Header from './Header';
+import TicTacToe from './tac-toe';
 
 const useStyles = makeStyles(() => ({
     container: {
@@ -14,9 +15,6 @@ const useStyles = makeStyles(() => ({
         minHeight: '85vh'
     }
 }));
-
-import Header from './Header';
-import TicTacToe from './tac-toe';
 
 const App: React.FC = () => {
     const classes = useStyles();

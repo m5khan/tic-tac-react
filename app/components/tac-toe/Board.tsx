@@ -1,14 +1,12 @@
 import React from 'react';
 import { Box } from '@material-ui/core';
-
-import { Sign } from '../tac-toe';
+import { Sign, Board } from '../tac-toe';
 import Cell from './Cell';
 
 type Props = {
-    matrix: Sign[][],
+    matrix: Board,
     onCellClick: (cell: number[]) => void
 }
-
 const Board: React.FC<Props> = (props: Props) => {
     return (
         <>
@@ -24,7 +22,6 @@ const Board: React.FC<Props> = (props: Props) => {
         </>
     )
 }
-
 
 type RowProps = {
     row: Sign[],

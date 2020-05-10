@@ -20,6 +20,8 @@ interface Action {
     payload: any
 }
 
+type Board = Sign[][];
+
 /**
  * Initial game state
  */
@@ -46,10 +48,9 @@ function gameReducer (gameState: GameState, action: Action) {
 }
 
 const TicTacToe: React.FC = () => {
-
-    const [gameState] = useReducer(gameReducer, initialGameState);
+    const [gameState, dispatch] = useReducer(gameReducer, initialGameState);
     // default board matrix
-    const [ board, setBoard ] = useState<Sign[][]>([
+    const [ board, setBoard ] = useState<Board>([
             [Sign.nix, Sign.nix, Sign.nix, Sign.nix, Sign.nix],
             [Sign.nix, Sign.nix, Sign.nix, Sign.nix, Sign.nix],
             [Sign.nix, Sign.nix, Sign.nix, Sign.nix, Sign.nix],
@@ -59,13 +60,13 @@ const TicTacToe: React.FC = () => {
 
     const addRow = (): void => {
         const newRow: Sign[] = board[0].map(_e => Sign.nix);
-        setBoard((prevState: Sign[][]) => {
+        setBoard((prevState: Board) => {
             return [...prevState, newRow];
         });
     }
 
     const addCol = (): void => {
-        setBoard((prevState: Sign[][]) => {
+        setBoard((prevState: Board) => {
             const board = prevState.map((row: Sign[]) => {
                 row.push(Sign.nix);
                 return row;
@@ -78,18 +79,43 @@ const TicTacToe: React.FC = () => {
         return gameState.players[gameState.turn];
     }
 
-    // const changePlayer = (): void => {
-    //     dispatch({
-    //         type: 'changePlayer',
-    //         payload: ''
-    //     });
-    // }
+    const changePlayer = (): void => {
+        
+        dispatch({
+            type: 'changePlayer',
+            payload: ''
+        });
+    }
 
     const onCellClick = (cell: number[]) => {
-        const newBoard = [...board];
-        newBoard[cell[0]][cell[1]] = getCurrentPlayer().sign;
+        if(board[cell[0]][cell[1]] !== Sign.nix) {
+            return;
+        }
+        const newBoard = reconstructBoard(cell);
         setBoard(newBoard);
+        changePlayer();
     }
+
+    /**
+     * Reconstruct board datasctucture as a new object, not mutated
+     */
+    const reconstructBoard = (cell: number[]): Board => {
+        return board.map((e, i) => {
+            if (i === cell[0]) {
+                const newRow = e.map((c, j) => {
+                    if(j === cell[1]) {
+                        return getCurrentPlayer().sign;
+                    } else {
+                        return c;
+                    }
+                });
+                return newRow
+            } else {
+                return e;
+            }
+        })
+    }
+
 
     return (
         <GamePanel addRow={addRow} addCol={addCol} player={getCurrentPlayer()}>
@@ -100,5 +126,6 @@ const TicTacToe: React.FC = () => {
 
 export default TicTacToe;
 export {
-    Sign
+    Sign,
+    Board
 };
