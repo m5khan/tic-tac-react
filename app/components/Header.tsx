@@ -18,7 +18,7 @@ const Header: React.FC = () => {
         <>
         <AppBar position="static" className={classes.bar}>
             <Toolbar>
-                <Typography variant="h6">Tic Tac React</Typography>
+                <Typography variant="h6">Tic Tac React | gomoku</Typography>
             </Toolbar>
         </AppBar>
         </>

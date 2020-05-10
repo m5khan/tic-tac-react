@@ -54,13 +54,9 @@ function gameReducer (gameState: GameState, action: Action) {
 const TicTacToe: React.FC = () => {
     const [gameState, dispatch] = useReducer(gameReducer, initialGameState);
     // default board matrix
-    const [ board, setBoard ] = useState<Board>([
-            [Sign.nix, Sign.nix, Sign.nix, Sign.nix, Sign.nix],
-            [Sign.nix, Sign.nix, Sign.nix, Sign.nix, Sign.nix],
-            [Sign.nix, Sign.nix, Sign.nix, Sign.nix, Sign.nix],
-            [Sign.nix, Sign.nix, Sign.nix, Sign.nix, Sign.nix],
-            [Sign.nix, Sign.nix, Sign.nix, Sign.nix, Sign.nix],
-        ]);
+    const [ board, setBoard ] = useState<Board>(
+            Array(15).fill(Array(15).fill(Sign.nix)) 
+    );
 
     const addRow = (): void => {
         if (gameState.finish) return;
@@ -73,11 +69,10 @@ const TicTacToe: React.FC = () => {
     const addCol = (): void => {
         if (gameState.finish) return;
         setBoard((prevState: Board) => {
-            const board = prevState.map((row: Sign[]) => {
-                row.push(Sign.nix);
-                return row;
+            const newboard = prevState.map((row: Sign[]) => {
+                return [...row, Sign.nix]
             });
-            return board;
+            return newboard;
         });
     }
 
@@ -130,12 +125,12 @@ const TicTacToe: React.FC = () => {
     const evaluateBoard = (board: Board, cell: number[]): number => {
         const sign = board[cell[0]][cell[1]];
         // horizontal
-        const horizontalEval = () => {
+        const rowEval = (row: Sign[], currentIndex: number) => {
             let count = 1;
             let brk = false;
-            let left = cell[1];
-            let right = cell[1];
-            let row = board[cell[0]];
+            let left = currentIndex;
+            let right = currentIndex;
+            //let row = board[cell[0]];
             while(!brk) {
                 if(row[left -1] && row[left - 1] === sign && left > -1 ) {
                     left --;
@@ -155,8 +150,17 @@ const TicTacToe: React.FC = () => {
             }
             return count;
         }
+        //horizontal
+        const hRow = board[cell[0]];
+        const hCurrentIndex = cell[1];
+        const hCount = rowEval(hRow, hCurrentIndex);
+        //vertical
+        const vRow = board.map((rows: Sign[]) => rows[cell[1]]);
+        const vCurrentIndex = cell[0];
+        const vCount = rowEval(vRow, vCurrentIndex);
+        // diagnol
 
-        return horizontalEval();
+        return vCount
     }
 
 

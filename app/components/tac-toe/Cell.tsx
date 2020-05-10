@@ -8,8 +8,8 @@ import { Sign } from '../tac-toe';
 const useStyles = makeStyles(() => ({
     paper: {
         display: 'flex',
-        width: '40px',
-        height: '40px',
+        width: '30px',
+        height: '30px',
         // backgroundColor: 'green',
         justifyContent: 'center',
         alignItems: 'center',

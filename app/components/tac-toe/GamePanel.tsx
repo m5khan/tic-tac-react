@@ -24,11 +24,18 @@ const GamePanel: React.FC<Props> = (props: Props) => {
         <>
         <Grid container direction="column">
             {/* Fisrt Row */}
-            <Grid container justify="center" style={{height: '50px'}}>
+            <Grid container justify="center" alignItems="center" style={{height: '50px'}}>
                 <Grid item>
-                    <Typography style={{marginLeft: '-35px'}} variant="body2" color="primary" component="p">
-                        current player : {props.player.name}
-                    </Typography>
+                    {
+                        props.end ? 
+                        <Typography style={{marginLeft: '-35px'}} variant="h5" color="primary" component="p">
+                            Player {props.player.name} Wins!
+                        </Typography>
+                        :
+                        <Typography style={{marginLeft: '-35px'}} variant="body2" color="primary" component="p">
+                            current player : {props.player.name}
+                        </Typography>
+                    }
                 </Grid>
             </Grid>
             {/* Second row contains game board */}
@@ -47,18 +54,6 @@ const GamePanel: React.FC<Props> = (props: Props) => {
                     <AddCircleOutlineIcon onClick={props.addRow} style={{marginLeft: '-35px'}} className={classes.icon} fontSize="large" color="disabled"/>
                 </Grid>
             </Grid>
-            {/* bottom row */}
-            {
-                props.end ? 
-                <Grid container justify="center" style={{height: '50px'}}>
-                    <Grid item>
-                        <Typography style={{marginLeft: '-35px'}} variant="h5" color="primary" component="p">
-                            Player {props.player.name} Wins!
-                        </Typography>
-                    </Grid>
-                </Grid>
-                : ''
-            }
         </Grid>
         </>
     )
