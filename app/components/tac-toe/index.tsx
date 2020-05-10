@@ -12,12 +12,13 @@ enum Sign {
 interface GameState {
     players: Player[],
     turn: number,
-    finish: boolean
+    finish: boolean,
+    winner: null | Player
 }
 
 interface Action {
     type: string,
-    payload: any
+    payload?: any
 }
 
 type Board = Sign[][];
@@ -31,7 +32,8 @@ const initialGameState: GameState = {
         new Player(2, Sign.o)
     ],
     turn: 0,
-    finish: false
+    finish: false,
+    winner: null
 }
 
 /**
@@ -42,6 +44,8 @@ function gameReducer (gameState: GameState, action: Action) {
         case 'changePlayer':
             const pturn = (gameState.turn + 1) % gameState.players.length;
             return {...gameState, turn: pturn};
+        case 'endGame':
+            return {...gameState, finish: true, winner: action.payload}
         default:
             throw new Error();
     }
@@ -59,6 +63,7 @@ const TicTacToe: React.FC = () => {
         ]);
 
     const addRow = (): void => {
+        if (gameState.finish) return;
         const newRow: Sign[] = board[0].map(_e => Sign.nix);
         setBoard((prevState: Board) => {
             return [...prevState, newRow];
@@ -66,6 +71,7 @@ const TicTacToe: React.FC = () => {
     }
 
     const addCol = (): void => {
+        if (gameState.finish) return;
         setBoard((prevState: Board) => {
             const board = prevState.map((row: Sign[]) => {
                 row.push(Sign.nix);
@@ -80,20 +86,25 @@ const TicTacToe: React.FC = () => {
     }
 
     const changePlayer = (): void => {
-        
-        dispatch({
-            type: 'changePlayer',
-            payload: ''
-        });
+        dispatch({type: 'changePlayer'});
+    }
+
+    const endGame = () => {
+        dispatch({type: 'endGame', payload: getCurrentPlayer()});
     }
 
     const onCellClick = (cell: number[]) => {
-        if(board[cell[0]][cell[1]] !== Sign.nix) {
+        if(board[cell[0]][cell[1]] !== Sign.nix || gameState.finish) {
             return;
         }
         const newBoard = reconstructBoard(cell);
         setBoard(newBoard);
-        changePlayer();
+        const counts = evaluateBoard(newBoard, cell);
+        if (counts < 5) {
+            changePlayer();
+        } else {
+            endGame();
+        }
     }
 
     /**
@@ -116,9 +127,41 @@ const TicTacToe: React.FC = () => {
         })
     }
 
+    const evaluateBoard = (board: Board, cell: number[]): number => {
+        const sign = board[cell[0]][cell[1]];
+        // horizontal
+        const horizontalEval = () => {
+            let count = 1;
+            let brk = false;
+            let left = cell[1];
+            let right = cell[1];
+            let row = board[cell[0]];
+            while(!brk) {
+                if(row[left -1] && row[left - 1] === sign && left > -1 ) {
+                    left --;
+                    count ++;
+                } else {
+                    left = -1;
+                }
+                if(row[right +1] && row[right +1] === sign && right > -1) {
+                    right ++;
+                    count ++;
+                } else {
+                    right = -1;
+                }
+                if(left === -1 && right === -1) {
+                    brk = true;
+                }
+            }
+            return count;
+        }
+
+        return horizontalEval();
+    }
+
 
     return (
-        <GamePanel addRow={addRow} addCol={addCol} player={getCurrentPlayer()}>
+        <GamePanel addRow={addRow} addCol={addCol} player={getCurrentPlayer()} end={gameState.finish}>
             <Board matrix={board} onCellClick={onCellClick}/>
         </GamePanel>
     )

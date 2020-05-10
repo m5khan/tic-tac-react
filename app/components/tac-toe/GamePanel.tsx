@@ -14,6 +14,7 @@ type Props = {
     addRow: () => void,
     addCol: () => void,
     player: Player,
+    end: boolean,
     children?: (string | JSX.Element )[] | JSX.Element;
 } 
 
@@ -40,12 +41,24 @@ const GamePanel: React.FC<Props> = (props: Props) => {
                     <AddCircleOutlineIcon onClick={props.addCol} className={classes.icon} fontSize="large" color="disabled" />
                 </Grid>
             </Grid>
-            {/* bottom row */}
+            {/* row */}
             <Grid container justify="center" alignItems="flex-end" style={{height: '50px'}}>
                 <Grid item>
                     <AddCircleOutlineIcon onClick={props.addRow} style={{marginLeft: '-35px'}} className={classes.icon} fontSize="large" color="disabled"/>
                 </Grid>
             </Grid>
+            {/* bottom row */}
+            {
+                props.end ? 
+                <Grid container justify="center" style={{height: '50px'}}>
+                    <Grid item>
+                        <Typography style={{marginLeft: '-35px'}} variant="h5" color="primary" component="p">
+                            Player {props.player.name} Wins!
+                        </Typography>
+                    </Grid>
+                </Grid>
+                : ''
+            }
         </Grid>
         </>
     )
