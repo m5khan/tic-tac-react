@@ -5,7 +5,8 @@ import { Sign } from '../tac-toe';
 import Cell from './Cell';
 
 type Props = {
-    matrix: Sign[][]
+    matrix: Sign[][],
+    onCellClick: (cell: number[]) => void
 }
 
 const Board: React.FC<Props> = (props: Props) => {
@@ -14,7 +15,7 @@ const Board: React.FC<Props> = (props: Props) => {
         <Box display="flex" flexDirection="column">
             {
                 props.matrix.map((row: Sign[], index: number) => {
-                    return <Rows key={index} row={row} rowIndex={index} />
+                    return <Rows key={index} row={row} rowIndex={index} onCellClick={props.onCellClick}/>
                 })
             }
             
@@ -28,13 +29,19 @@ const Board: React.FC<Props> = (props: Props) => {
 type RowProps = {
     row: Sign[],
     rowIndex: number
+    onCellClick: (cell: number[]) => void
 }
 const Rows: React.FC<RowProps> = (props: RowProps) => {
     return (
         <Box display="flex" flexDirection="row">
             {
                 props.row.map((value: Sign, index: number) => {
-                    return <Cell key={`${props.rowIndex},${index}`} sign={value} cellIndex={[props.rowIndex, index]}/>
+                    return <Cell
+                        key={`${props.rowIndex},${index}`}
+                        sign={value}
+                        cellIndex={[props.rowIndex, index]}
+                        onCellClick={props.onCellClick}
+                    />
                 })
             }
         </Box>

@@ -21,7 +21,8 @@ const useStyles = makeStyles(() => ({
 
 type Props = {
     sign: Sign;
-    cellIndex: number[]
+    cellIndex: number[];
+    onCellClick: (cellIndex: number[]) => void
 }
 
 const Cell: React.FC<Props> = (props: Props) => {
@@ -38,7 +39,7 @@ const Cell: React.FC<Props> = (props: Props) => {
     }
 
     return (
-        <Paper className={classes.paper} variant="outlined" square>
+        <Paper onClick={() => {props.onCellClick(props.cellIndex)}} className={classes.paper} variant="outlined" square>
             {
                 signIcon(props.sign)
             }
